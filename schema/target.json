@@ -1,0 +1,46 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema#",
+    "$id": "http://webstatic.hplzh.cn/schema/wordlib/target.json",
+    "definitions": {
+        "path": {
+            "type": "string",
+            "pattern": "^(?:[a-zA-Z]:[\\\\/]|/)?(?:(?:[^\\\\/:*?\"<>|\\r\\n]+[\\\\/])*[^\\\\/:*?\"<>|\\r\\n]*)?$"
+        }
+    },
+    "type": "object",
+    "properties": {
+        "src": {
+            "oneOf": [
+                {
+                    "$ref": "#/definitions/path"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/path"
+                    }
+                }
+            ]
+        },
+        "tags": {
+            "oneOf": [
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "const": "any"
+                }
+            ]
+        },
+        "exclude": {
+            "$ref": "#/definitions/path"
+        }
+    },
+    "required": [
+        "src",
+        "tags"
+    ]
+}
