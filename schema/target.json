@@ -18,7 +18,8 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/path"
-                    }
+                    },
+                    "minItems": 1
                 }
             ]
         },
@@ -28,15 +29,32 @@
                     "type": "array",
                     "items": {
                         "type": "string"
-                    }
+                    },
+                    "minItems": 1
                 },
                 {
                     "const": "any"
                 }
-            ]
+            ],
+            "default": "any"
         },
         "exclude": {
             "$ref": "#/definitions/path"
+        },
+        "filter": {
+            "type": "object",
+            "properties": {
+                "include": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "regex"
+                    }
+                },
+                "exclude": {
+                    "$ref": "#/properties/filter/properties/include"
+                }
+            }
         }
     },
     "required": [
