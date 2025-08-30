@@ -63,9 +63,7 @@ class TargetInfo:
         f_e = self.f_exclude
         for l in self.src:
             r += ls(l, self.exclude)
-        print(r)
         r1 = filter(lambda x: any(rx.search(x) != None for rx in f_i), r) if len(f_i) else r
-        print(list(r1))
         r2 = filter(lambda x: not any(rx.search(x) != None for rx in f_e), r1)
         return list(r2)
 
