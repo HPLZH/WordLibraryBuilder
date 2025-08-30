@@ -77,6 +77,8 @@ class TargetInfo:
             with open(fn, "r", encoding="utf-8") as f:
                 o = json.load(f)
                 for k in o:
+                    if str(k).startswith("$"):
+                        continue
                     if len(self.tags) == 0 or k in self.tags:
                         r.update(list(o[k]))
         return r
