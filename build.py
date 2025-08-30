@@ -63,7 +63,9 @@ class TargetInfo:
         f_e = self.f_exclude
         for l in self.src:
             r += ls(l, self.exclude)
-        r1 = filter(lambda x: any(rx.search(x) != None for rx in f_i), r)
+        print(r)
+        r1 = filter(lambda x: any(rx.search(x) != None for rx in f_i), r) if len(f_i) else r
+        print(list(r1))
         r2 = filter(lambda x: not any(rx.search(x) != None for rx in f_e), r1)
         return list(r2)
 
@@ -79,13 +81,30 @@ class TargetInfo:
 
 
 if __name__ == "__main__":
-    import sys
+    import argparse
 
-    target = sys.argv[1]
-    output = sys.argv[2]
+    parser = argparse.ArgumentParser()
+    parser.add_argument("config", type=str, help="配置文件")
+    parser.add_argument("output", type=str, help="输出目标文件")
+    parser.add_argument(
+        "-d", type=str, dest="dep", help="改为输出依赖文件，而不是目标文件"
+    )
+
+    args = parser.parse_args()
+
+    target = args.config
+    output = args.output
+    dep = args.dep
 
     with open(target, "r", encoding="utf-8") as f:
         o = json.load(f)
-    r = TargetInfo(o).build()
-    with open(output, "w", encoding="utf-8") as f:
-        f.writelines(line + "\n" for line in r)
+    t = TargetInfo(o)
+
+    if dep:
+        l = [os.path.relpath(p).replace("\\", "/") for p in sorted(t.ls())]
+        with open(dep, "w", encoding="utf-8") as f:
+            f.write(f"{output} : {target} {" ".join(l)}")
+    else:
+        r = t.build()
+        with open(output, "w", encoding="utf-8") as f:
+            f.writelines(line + "\n" for line in r)
