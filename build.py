@@ -67,14 +67,14 @@ class TargetInfo:
         r2 = filter(lambda x: not any(rx.search(x) != None for rx in f_e), r1)
         return list(r2)
 
-    def build(self) -> list[str]:
-        r = []
+    def build(self) -> Iterable[str]:
+        r = set()
         for fn in self.ls():
             with open(fn, "r", encoding="utf-8") as f:
                 o = json.load(f)
                 for k in o:
                     if len(self.tags) == 0 or k in self.tags:
-                        r += list(o[k])
+                        r.update(list(o[k]))
         return r
 
 
