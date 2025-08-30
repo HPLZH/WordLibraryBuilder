@@ -63,7 +63,11 @@ class TargetInfo:
         f_e = self.f_exclude
         for l in self.src:
             r += ls(l, self.exclude)
-        r1 = filter(lambda x: any(rx.search(x) != None for rx in f_i), r) if len(f_i) else r
+        r1 = (
+            filter(lambda x: any(rx.search(x) != None for rx in f_i), r)
+            if len(f_i)
+            else r
+        )
         r2 = filter(lambda x: not any(rx.search(x) != None for rx in f_e), r1)
         return list(r2)
 
@@ -99,8 +103,9 @@ if __name__ == "__main__":
     t = TargetInfo(o)
 
     if dep:
+        makefile_encoding = os.environ.get("MAKEFILE_ENCODING", "utf-8")
         l = [os.path.relpath(p).replace("\\", "/") for p in sorted(t.ls())]
-        with open(dep, "w", encoding="utf-8") as f:
+        with open(dep, "w", encoding=makefile_encoding) as f:
             f.write(f"{output} : {target} {" ".join(l)}")
     else:
         r = t.build()
